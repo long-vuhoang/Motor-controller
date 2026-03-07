@@ -66,7 +66,7 @@
 
 namespace xyber {
 
-inline constexpr uint8_t MAX_ACTUATORS_PER_BUS = 3;
+inline constexpr uint8_t MAX_ACTUATORS_PER_BUS = 4;
 
 /*
  * Compile-time layout check.
