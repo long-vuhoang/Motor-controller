@@ -19,7 +19,13 @@
  */
 
 #include "xyber_controller.h"
+
+#include <cstdint>
+#include <iostream>
+#include <thread>
+
 using namespace xyber;
+using namespace std::chrono_literals;
 
 int main() {
   auto* ctrl = XyberController::GetInstance();
@@ -29,16 +35,14 @@ int main() {
 
   // ── 2. Gắn động cơ: (device, bus_idx, type, name, can_id) ────────────────
   // Bus 0 – tối đa 3 động cơ
-  ctrl->AttachActuator("arm", 0, ActuatorType::Robstride_02, "shoulder_pitch", 1);
-  ctrl->AttachActuator("arm", 0, ActuatorType::Robstride_02, "shoulder_roll",  2);
-  ctrl->AttachActuator("arm", 0, ActuatorType::Robstride_02, "shoulder_yaw",   3);
-
-  // Bus 1 – tối đa 3 động cơ
-  ctrl->AttachActuator("arm", 1, ActuatorType::Robstride_02, "elbow_pitch",    1);
-  ctrl->AttachActuator("arm", 1, ActuatorType::Robstride_02, "elbow_yaw",      2);
-
-  // Bus 2
-  ctrl->AttachActuator("arm", 2, ActuatorType::Robstride_00, "wrist_roll",     1);
+  ctrl->AttachActuator("arm", 0, ActuatorType::Robstride_00, "a", 1);
+  ctrl->AttachActuator("arm", 0, ActuatorType::Robstride_02, "b", 2);
+  ctrl->AttachActuator("arm", 1, ActuatorType::Robstride_00, "c", 1);
+  ctrl->AttachActuator("arm", 1, ActuatorType::Robstride_02, "d", 2);
+  ctrl->AttachActuator("arm", 2, ActuatorType::Robstride_00, "e", 3);
+  ctrl->AttachActuator("arm", 2, ActuatorType::Robstride_00, "f", 4);
+  ctrl->AttachActuator("arm", 3, ActuatorType::Robstride_00, "g", 3);
+  ctrl->AttachActuator("arm", 3, ActuatorType::Robstride_00, "h", 4);
 
   // ── 3. Tuỳ chọn: đặt realtime ────────────────────────────────────────────
   ctrl->SetRealtime(/*rt_priority=*/80, /*bind_cpu=*/3);
@@ -54,12 +58,31 @@ int main() {
   // ctrl->EnableActuator("shoulder_pitch");
 
   // ── 6. MIT control loop ───────────────────────────────────────────────────
-  for (int i = 0; i < 1000; ++i) {
-    float pos = ctrl->GetPosition("shoulder_pitch");
-    ctrl->SetMitCmd("shoulder_pitch",
-                    /*pos=*/0.0f, /*vel=*/0.0f, /*effort=*/0.0f,
-                    /*kp=*/10.0f, /*kd=*/1.0f);
-    // ...
+  float dt = 0;
+  float pos_begin = ctrl->GetPosition("a");
+  for (size_t i = 0; i < 100 * 30; i++) {
+
+    // Set target position using MIT mode
+    double pos_cmd = pos_begin + 2 * sin(dt);
+    ctrl->SetMitCmd("a", pos_cmd, 0, 0, 0.9, 0.2);
+    ctrl->SetMitCmd("b", pos_cmd, 0, 0, 0.9, 0.2);
+    ctrl->SetMitCmd("c", pos_cmd, 0, 0, 0.9, 0.2);
+    ctrl->SetMitCmd("d", pos_cmd, 0, 0, 0.9, 0.2);
+    ctrl->SetMitCmd("e", pos_cmd, 0, 0, 0.9, 0.2);
+    ctrl->SetMitCmd("f", pos_cmd, 0, 0, 0.9, 0.2);
+    ctrl->SetMitCmd("g", pos_cmd, 0, 0, 0.9, 0.2);
+    ctrl->SetMitCmd("h", pos_cmd, 0, 0, 0.9, 0.2);
+
+    // read current position
+    float pos_now = ctrl->GetPosition("a");
+    //std::cout << "Position: Cmd " << pos_cmd << " Now " << pos_now << std::endl;
+
+    // phase control
+    dt += 0.01;
+    if (dt >= 6.28) {
+      dt = 0.0;
+    }
+    std::this_thread::sleep_for(10ms);
   }
 
   // ── 7. Shutdown ───────────────────────────────────────────────────────────
