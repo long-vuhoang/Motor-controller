@@ -13,3 +13,4 @@ find_package(spdlog REQUIRED)
 # Gọi các thư mục con chứa cấu hình build
 add_subdirectory(robstride_api)
 add_subdirectory(example)
+add_subdirectory(benchmark)

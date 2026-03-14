@@ -39,9 +39,9 @@ int main() {
   ctrl->AttachActuator("arm", 0, ActuatorType::Robstride_02, "b", 2);
   ctrl->AttachActuator("arm", 1, ActuatorType::Robstride_00, "c", 1);
   ctrl->AttachActuator("arm", 1, ActuatorType::Robstride_02, "d", 2);
-  ctrl->AttachActuator("arm", 2, ActuatorType::Robstride_00, "e", 3);
+  ctrl->AttachActuator("arm", 2, ActuatorType::Robstride_02, "e", 3);
   ctrl->AttachActuator("arm", 2, ActuatorType::Robstride_00, "f", 4);
-  ctrl->AttachActuator("arm", 3, ActuatorType::Robstride_00, "g", 3);
+  ctrl->AttachActuator("arm", 3, ActuatorType::Robstride_02, "g", 3);
   ctrl->AttachActuator("arm", 3, ActuatorType::Robstride_00, "h", 4);
 
   // ── 3. Tuỳ chọn: đặt realtime ────────────────────────────────────────────
