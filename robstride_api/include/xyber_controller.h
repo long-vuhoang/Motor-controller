@@ -59,7 +59,7 @@ class XyberController {
    *
    * @param device_name  Name passed to CreateDevice().
    * @param bus_idx      Bus index 0–3.
-   * @param type         Actuator model (POWER_FLOW_R86, R52, L28, OMNI_PICKER).
+   * @param type         Actuator model (RS00, RS02, RS05).
    * @param actr_name    Globally unique actuator name for later lookup.
    * @param can_id       CAN node id on that bus: 1, 2, or 3.
    */
@@ -111,6 +111,9 @@ class XyberController {
 
   /** @return Position in rad. */
   float GetPosition(const std::string& name);
+
+  /** @brief Set the homing position for an actuator. */
+  void SetHomingPosition(const std::string& name);
 
   /** @brief Override the MIT parameter set for an actuator. */
   void SetMitParam(const std::string& name, MitParam param);

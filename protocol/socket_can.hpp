@@ -9,8 +9,8 @@
 #include <linux/can.h>
 #include <net/if.h>
 #include <pthread.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
-#include <spdlog/spdlog.h>
+// #include <spdlog/sinks/stdout_color_sinks.h>
+// #include <spdlog/spdlog.h> // For logging within SocketCAN (e.g. socket errors) but conflict with AimRT fmt version, so we will initialize logger from outside and avoid including spdlog headers here.
 #include <sys/ioctl.h>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -68,16 +68,16 @@ class SocketCAN {
     static std::shared_ptr<SocketCAN> createInstance(const std::string &interface) {
         return std::shared_ptr<SocketCAN>(new SocketCAN(interface));
     }
-    static std::shared_ptr<spdlog::logger> logger_;
+    //static std::shared_ptr<spdlog::logger> logger_;
     static std::unordered_map<std::string, std::shared_ptr<SocketCAN>> instances_;
 
    public:
     SocketCAN(const SocketCAN &) = delete;
     SocketCAN &operator=(const SocketCAN &) = delete;
     ~SocketCAN();
-    static void init_logger(std::shared_ptr<spdlog::logger> logger) { logger_ = logger; }
+    //static void init_logger(std::shared_ptr<spdlog::logger> logger) { logger_ = logger; }
     static std::shared_ptr<SocketCAN> get(std::string interface) {
-        if (logger_.get() == nullptr) logger_ = spdlog::stdout_color_mt("SocketCAN");
+        //if (logger_.get() == nullptr) logger_ = spdlog::stdout_color_mt("SocketCAN");
         if (instances_.find(interface) == instances_.end()) instances_[interface] = createInstance(interface);
         return instances_[interface];
     }

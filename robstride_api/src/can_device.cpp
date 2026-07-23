@@ -72,6 +72,10 @@ bool CanDevice::AttachActuator(uint8_t bus_idx, ActuatorType type,
       actr = new xyber::RobstrideMotor(
           type, actr_name, can_id);
       break;
+    case ActuatorType::Robstride_05:
+      actr = new xyber::RobstrideMotor(
+          type, actr_name, can_id);
+      break;
     default:
       LOG_ERROR("[CanDevice %s] Unsupported actuator type %d for '%s'.",
                 name_.c_str(), static_cast<int>(type), actr_name.c_str());

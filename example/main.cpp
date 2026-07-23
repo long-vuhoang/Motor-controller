@@ -35,14 +35,14 @@ int main() {
 
   // ── 2. Gắn động cơ: (device, bus_idx, type, name, can_id) ────────────────
   // Bus 0 – tối đa 3 động cơ
-  ctrl->AttachActuator("arm", 0, ActuatorType::Robstride_00, "a", 1);
-  ctrl->AttachActuator("arm", 0, ActuatorType::Robstride_02, "b", 2);
-  ctrl->AttachActuator("arm", 1, ActuatorType::Robstride_00, "c", 1);
-  ctrl->AttachActuator("arm", 1, ActuatorType::Robstride_02, "d", 2);
-  ctrl->AttachActuator("arm", 2, ActuatorType::Robstride_00, "e", 3);
-  ctrl->AttachActuator("arm", 2, ActuatorType::Robstride_00, "f", 4);
-  ctrl->AttachActuator("arm", 3, ActuatorType::Robstride_00, "g", 3);
-  ctrl->AttachActuator("arm", 3, ActuatorType::Robstride_00, "h", 4);
+  ctrl->AttachActuator("arm", 1, ActuatorType::Robstride_00, "a", 3);
+  ctrl->AttachActuator("arm", 0, ActuatorType::Robstride_02, "b", 1);
+  // ctrl->AttachActuator("arm", 1, ActuatorType::Robstride_00, "c", 1);
+  // ctrl->AttachActuator("arm", 1, ActuatorType::Robstride_02, "d", 2);
+  // ctrl->AttachActuator("arm", 2, ActuatorType::Robstride_00, "e", 3);
+  // ctrl->AttachActuator("arm", 2, ActuatorType::Robstride_00, "f", 4);
+  // ctrl->AttachActuator("arm", 3, ActuatorType::Robstride_00, "g", 3);
+  // ctrl->AttachActuator("arm", 3, ActuatorType::Robstride_00, "h", 4);
 
   // ── 3. Tuỳ chọn: đặt realtime ────────────────────────────────────────────
   ctrl->SetRealtime(/*rt_priority=*/80, /*bind_cpu=*/3);
@@ -66,16 +66,16 @@ int main() {
     double pos_cmd = pos_begin + 2 * sin(dt);
     ctrl->SetMitCmd("a", pos_cmd, 0, 0, 0.9, 0.2);
     ctrl->SetMitCmd("b", pos_cmd, 0, 0, 0.9, 0.2);
-    ctrl->SetMitCmd("c", pos_cmd, 0, 0, 0.9, 0.2);
-    ctrl->SetMitCmd("d", pos_cmd, 0, 0, 0.9, 0.2);
-    ctrl->SetMitCmd("e", pos_cmd, 0, 0, 0.9, 0.2);
-    ctrl->SetMitCmd("f", pos_cmd, 0, 0, 0.9, 0.2);
-    ctrl->SetMitCmd("g", pos_cmd, 0, 0, 0.9, 0.2);
-    ctrl->SetMitCmd("h", pos_cmd, 0, 0, 0.9, 0.2);
+    // ctrl->SetMitCmd("c", pos_cmd, 0, 0, 0.9, 0.2);
+    // ctrl->SetMitCmd("d", pos_cmd, 0, 0, 0.9, 0.2);
+    // ctrl->SetMitCmd("e", pos_cmd, 0, 0, 0.9, 0.2);
+    // ctrl->SetMitCmd("f", pos_cmd, 0, 0, 0.9, 0.2);
+    // ctrl->SetMitCmd("g", pos_cmd, 0, 0, 0.9, 0.2);
+    // ctrl->SetMitCmd("h", pos_cmd, 0, 0, 0.9, 0.2);
 
     // read current position
     float pos_now = ctrl->GetPosition("a");
-    //std::cout << "Position: Cmd " << pos_cmd << " Now " << pos_now << std::endl;
+    std::cout << "Position: Cmd " << pos_cmd << " Now " << pos_now << std::endl;
 
     // phase control
     dt += 0.01;

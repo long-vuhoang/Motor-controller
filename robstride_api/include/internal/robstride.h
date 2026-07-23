@@ -93,7 +93,7 @@ class RobstrideMotor final : public Actuator {
 
   /* ── Constructor ──────────────────────────────────────────────────── */
   /**
-   * @param type     ActuatorType::Robstride_00 or Robstride_02.
+   * @param type     ActuatorType::Robstride_00 or Robstride_02 or Robstride_05.
    * @param name     Unique human-readable name for logging / lookup.
    * @param can_id   CAN node id on this bus: 1, 2, or 3.
    */

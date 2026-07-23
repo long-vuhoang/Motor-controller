@@ -6,7 +6,16 @@
 
 #include "socket_can.hpp"
 
-std::shared_ptr<spdlog::logger> SocketCAN::logger_ = nullptr;
+
+/**
+ * @description: log helper
+ * @return {*}
+ */
+#define LOG_INFO(s, ...) printf("[INFO] " s "\n", ##__VA_ARGS__)
+#define LOG_WARN(s, ...) printf("\033[33m[WARN] " s "\033[0m\n", ##__VA_ARGS__)
+#define LOG_ERROR(s, ...) printf("\033[31m[ERROR] " s "\033[0m\n", ##__VA_ARGS__)
+#define LOG_DEBUG(s, ...) printf("\033[32m[DEBUG] " s "\033[0m\n", ##__VA_ARGS__)
+//std::shared_ptr<spdlog::logger> SocketCAN::logger_ = nullptr;
 std::unordered_map<std::string, std::shared_ptr<SocketCAN>> SocketCAN::instances_;
 
 SocketCAN::SocketCAN(std::string interface)
@@ -19,7 +28,7 @@ SocketCAN::~SocketCAN() { this->close(); }
 void SocketCAN::open(std::string interface) {
     sockfd_ = socket(PF_CAN, SOCK_RAW, CAN_RAW);
     if (sockfd_ == INIT_FD) {
-        logger_->error("Failed to create CAN socket");
+        LOG_ERROR("Failed to create CAN socket");
         throw std::runtime_error("Failed to create CAN socket");
     }
 
@@ -28,7 +37,7 @@ void SocketCAN::open(std::string interface) {
 
     strncpy(if_request_.ifr_name, interface.c_str(), IFNAMSIZ);
     if (ioctl(sockfd_, SIOCGIFINDEX, &if_request_) == -1) {
-        logger_->error("Unable to detect CAN interface {}", interface);
+        LOG_ERROR("Unable to detect CAN interface {}", interface);
 
         this->close();
         throw std::runtime_error("Unable to detect CAN interface " + interface);
@@ -39,19 +48,19 @@ void SocketCAN::open(std::string interface) {
     addr_.can_ifindex = if_request_.ifr_ifindex;
     int rc = ::bind(sockfd_, reinterpret_cast<struct sockaddr *>(&addr_), sizeof(addr_));
     if (rc == -1) {
-        logger_->error("Failed to bind socket to network interface {}", interface);
+        LOG_ERROR("Failed to bind socket to network interface {}", interface);
         this->close();
         throw std::runtime_error("Failed to bind socket to network interface " + interface);
     }
 
     int flags = fcntl(sockfd_, F_GETFL, 0);
     if (flags == -1) {
-        logger_->error("Failed to get socket flags");
+        LOG_ERROR("Failed to get socket flags");
         this->close();
         throw std::runtime_error("Failed to get socket flags");
     }
     if (fcntl(sockfd_, F_SETFL, flags | O_NONBLOCK) == -1) {
-        logger_->error("Failed to set socket to non-blocking");
+        LOG_ERROR("Failed to set socket to non-blocking");
         this->close();
         throw std::runtime_error("Failed to set socket to non-blocking");
     }
@@ -100,7 +109,7 @@ void SocketCAN::open(std::string interface) {
                         if (errno == EAGAIN || errno == EWOULDBLOCK) {
                             break; 
                         }
-                        logger_->warn("CAN read error: {}", strerror(errno));
+                        LOG_WARN("CAN read error: {}", strerror(errno));
                         break;
                     }
                     if (len == 0){
@@ -161,7 +170,8 @@ void SocketCAN::open(std::string interface) {
                 std::this_thread::sleep_for(std::chrono::microseconds(1000));  // 避免忙等待
             }
             if (count >= MAX_RETRY_COUNT) {
-                logger_->error("Failed to transmit CAN frame");
+                //logger_->error("Failed to transmit CAN frame");
+                LOG_ERROR("Failed to transmit CAN frame");
             } else if (send_sleep_us_ > 0) {
                 std::this_thread::sleep_for(std::chrono::microseconds(send_sleep_us_));
             }
@@ -182,7 +192,8 @@ void SocketCAN::close() {
 
 void SocketCAN::transmit(const can_frame &frame) {
     if (sockfd_ == INIT_FD) {
-        logger_->error("Unable to transmit: Socket not open");
+        //logger_->error("Unable to transmit: Socket not open");
+        LOG_ERROR("Unable to transmit: Socket not open");
         return;
     }
     tx_queue_.bounded_push(frame);

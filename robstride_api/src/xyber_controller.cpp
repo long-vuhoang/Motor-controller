@@ -191,6 +191,12 @@ float XyberController::GetPosition(const std::string& name) {
   return (it != actr_dev_map_.end()) ? it->second->GetPosition(name) : 0.0f;
 }
 
+// ── Setters ───────────────────────────────────────────────────────────────────
+void XyberController::SetHomingPosition(const std::string& name) {
+  auto it = actr_dev_map_.find(name);
+  if (it != actr_dev_map_.end()) it->second->SetHomingPosition(name);
+}
+
 // ── MIT ───────────────────────────────────────────────────────────────────────
 
 void XyberController::SetMitParam(const std::string& name, MitParam param) {

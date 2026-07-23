@@ -72,7 +72,7 @@ class CanDevice {
   /**
    * @brief Attach an actuator to one CAN bus of this device.
    * @param bus_idx  Bus index 0 … MAX_CAN_BUSES-1
-   * @param type     ActuatorType (POWER_FLOW_R86, R52, L28, OMNI_PICKER)
+   * @param type     ActuatorType (RS00, RS02, RS05)
    * @param name     Globally unique actuator name
    * @param can_id   CAN id on the bus: 1, 2, or 3
    * @return true on success

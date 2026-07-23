@@ -24,8 +24,10 @@ RobstrideMotor::RobstrideMotor(ActuatorType   type,
    */
   if (type_ == ActuatorType::Robstride_00) {
     mit_param_ = MitParam ROBSTRIDE_00_MIT_MODE_DEFAULT_PARAM;
-  } else {
+  } else if (type_ == ActuatorType::Robstride_02) {
     mit_param_ = MitParam ROBSTRIDE_02_MIT_MODE_DEFAULT_PARAM;
+  } else if (type_ == ActuatorType::Robstride_05) {
+    mit_param_ = MitParam ROBSTRIDE_05_MIT_MODE_DEFAULT_PARAM;
   }
 }
 
@@ -64,7 +66,14 @@ const RobstrideMotor::Limits& RobstrideMotor::GetLimits() const {
       .kp       = 500.0f,
       .kd       = 5.0f,
   };
-  return (type_ == ActuatorType::Robstride_00) ? kLimits00 : kLimits02;
+  static const Limits kLimits05 = {
+    .position = 4.0f * static_cast<float>(M_PI),
+    .velocity = 33.0f,
+    .torque   = 6.0f,
+    .kp       = 500.0f,
+    .kd       = 5.0f,
+  };
+  return (type_ == ActuatorType::Robstride_00) ? kLimits00 : (type_ == ActuatorType::Robstride_02) ? kLimits02 : kLimits05;
 }
 
 // ── Quantisation helpers ─────────────────────────────────────────────────────

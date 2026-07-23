@@ -35,14 +35,14 @@ enum class CtrlChannel : uint8_t {
 enum class ActuatorType {
   Robstride_00,
   Robstride_02,
-  Servo,
+  Robstride_05,
   UNKNOWN,
 };
 
 static ActuatorType StringToType(std::string type) {
   if (type == "Robstride_00") return ActuatorType::Robstride_00;
   if (type == "Robstride_02") return ActuatorType::Robstride_02;
-  if (type == "Servo") return ActuatorType::Servo;
+  if (type == "Robstride_05") return ActuatorType::Robstride_05;
   return ActuatorType::UNKNOWN;
 }
 
@@ -80,8 +80,8 @@ struct MitParam {
   {                                         \
       .pos_min = -4.0f * M_PI,              \
       .pos_max = 4.0f * M_PI,               \
-      .vel_min = -44.0f,                    \
-      .vel_max = 44.0f,                     \
+      .vel_min = -33.0f,                    \
+      .vel_max = 33.0f,                     \
       .toq_min = -14.0f,                    \
       .toq_max = 14.0f,                     \
       .kp_min = 0.0f,                       \
@@ -98,6 +98,20 @@ struct MitParam {
       .vel_max = 44.0f,                     \
       .toq_min = -17.0f,                    \
       .toq_max = 17.0f,                     \
+      .kp_min = 0.0f,                       \
+      .kp_max = 500.0f,                     \
+      .kd_min = 0.0f,                       \
+      .kd_max = 5.0f,                       \
+  }
+
+#define ROBSTRIDE_05_MIT_MODE_DEFAULT_PARAM \
+  {                                         \
+      .pos_min = -4.0f * M_PI,              \
+      .pos_max = 4.0f * M_PI,               \
+      .vel_min = -44.0f,                    \
+      .vel_max = 44.0f,                     \
+      .toq_min = -6.0f,                     \
+      .toq_max = 6.0f,                      \
       .kp_min = 0.0f,                       \
       .kp_max = 500.0f,                     \
       .kd_min = 0.0f,                       \

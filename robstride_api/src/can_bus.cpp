@@ -135,7 +135,7 @@ bool CanBus::RegisterActuator(Actuator* actr) {
 
   LOG_DEBUG("[CanBus %s] Registered '%s' at CAN id %u (Robstride %s).",
             interface_.c_str(), actr->GetName().c_str(), id,
-            actr->GetType() == ActuatorType::Robstride_00 ? "00" : "02");
+            actr->GetType() == ActuatorType::Robstride_00 ? "00" : actr->GetType() == ActuatorType::Robstride_02 ? "02" : "05" );
   return true;
 }
 
